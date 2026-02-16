@@ -14,24 +14,28 @@ const PORT = process.env.PORT || 5000;
    =========================== */
 
 const allowedOrigins = [
-  "http://localhost:5173",      // Vite local
-  "https://profile-project-rosy.vercel.app/"
+    "http://localhost:5173",
+    "https://profile-project-rosy.vercel.app"
 ];
 
 app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
+    cors({
+        origin: function (origin, callback) {
+            if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      } else {
-        return callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true
-  })
+            if (
+                allowedOrigins.includes(origin) ||
+                origin.endsWith(".vercel.app")
+            ) {
+                return callback(null, true);
+            } else {
+                return callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true
+    })
 );
+
 
 /* ===========================
    MIDDLEWARE
@@ -44,7 +48,7 @@ app.use(express.json());
    =========================== */
 
 app.get("/", (req, res) => {
-  res.send("API Running...");
+    res.send("API Running...");
 });
 
 app.use('/api', profileRoutes);
@@ -54,13 +58,13 @@ app.use('/api', profileRoutes);
    =========================== */
 
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log("MongoDB Error:", err));
+    .then(() => console.log("MongoDB connected"))
+    .catch(err => console.log("MongoDB Error:", err));
 
 /* ===========================
    START SERVER
    =========================== */
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
